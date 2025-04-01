@@ -1,6 +1,5 @@
 import path from "path";
 import sqlite3 from "sqlite3";
-import { migrate } from "./migration";
 
 const dbPath = path.join(process.cwd(), "INA.db");
 export const db = new sqlite3.Database(
@@ -11,7 +10,6 @@ export const db = new sqlite3.Database(
    console.error(err.message);
   }
   console.log("Connected to the INA database.");
-  migrate();
  }
 );
 
@@ -27,14 +25,14 @@ export const apiGet = async (query: string) => {
     });
    };
    
-   export const apiPost = async (query: string, values: string[]) => {
+export const apiPost = async (query: string, values: string[]) => {
     return await new Promise((resolve, reject) => {
-     db.run(query, values, function (err) {
-      if (err) {
-       console.log(err);
-       reject(err);
-      }
-      resolve(null);
-     });
+        db.run(query, values, function (err) {
+        if (err) {
+        console.log(err);
+        reject(err);
+        }
+        resolve(null);
+        });
     });
-   };
+};

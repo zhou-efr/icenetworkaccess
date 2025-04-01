@@ -4,6 +4,9 @@ import "./globals.css";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { SessionProvider } from "next-auth/react"; // Import SessionProvider
+import { SideBar } from "@/components/sidebar";
+import { User } from "next-auth";
+import { getAdmins } from "./api/admin";
 
 const poppins_font = Poppins({
   variable: '--font-poppins',
@@ -24,13 +27,17 @@ export default async function RootLayout({
 }>) {
   const session = await auth()
   if (!session) redirect("/api/auth/signin")
+  const admins = await getAdmins();
+  const isAdmin = admins.includes(session.user?.email as string);
   return (
-    <html lang="en">
+    <html className="h-full bg-ice-efrei-dark-blue" lang="en">
       <body
-        className={`${poppins_font.variable} mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 antialiased bg-ice-efrei-dark-blue text-white`}
+        className={`${poppins_font.variable} h-full`}
       >
-        <SessionProvider session={session}> {/* Wrap children with SessionProvider */}
-          {children}
+        <SessionProvider session={session}> 
+          <SideBar user= {session.user as User} isAdmin={isAdmin}>
+            {children}
+          </SideBar>
         </SessionProvider>
       </body>
     </html>
