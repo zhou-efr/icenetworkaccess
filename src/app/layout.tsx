@@ -13,8 +13,8 @@ const poppins_font = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "ICE Network Access Delivery",
-  description: "Récupération des accès VPN au réseau Lowcaltech",
+  title: "ICE Network Access",
+  description: "Récupération des accès VPN au réseau Lowcaltech ou INA",
 };
 
 export default async function RootLayout({

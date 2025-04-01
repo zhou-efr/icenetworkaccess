@@ -1,9 +1,11 @@
 import { auth } from "@/auth"
 import { redirect } from 'next/navigation'
+import TestPostBtn from "./components/testpostbtn"
 
 export default async function Home() {
   const session = await auth()
   if (!session) redirect("/api/auth/signin")
+
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center gap-3">
       <div className="overflow-hidden rounded-lg bg-ice-efrei-blue shadow">
@@ -26,7 +28,8 @@ export default async function Home() {
         className="rounded-md bg-white/10 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20"
       >
         Sign out
-        </a>
+      </a>
+      <TestPostBtn />
     </div>
   )
 }
