@@ -1,12 +1,15 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { getAdmins } from "../api/admin";
+import { getAdmins, getAdminTable } from "../api/admin";
+import { AddAdminBtn } from "@/components/addadminbtn";
+import { DelAdminBtn } from "@/components/deladminbtn";
 
 export default async function Settings(){
     const session = await auth();
     if (!session) redirect("/api/auth/signin");
-    const admins = await getAdmins();
-    if (!admins.includes(session.user?.email as string)) redirect("/api/auth/signin");
+    const adminmails = await getAdmins();
+    if (!adminmails.includes(session.user?.email as string)) redirect("/api/auth/signin");
+    const admins = await getAdminTable();
     return (
         <div className="mx-auto max-w-7xl">
           <div className="py-10">
@@ -19,12 +22,13 @@ export default async function Settings(){
                   </p>
                 </div>
                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                  <button
+                  {/* <button
                     type="button"
                     className="block rounded-md bg-indigo-500 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                   >
-                    Add key
-                  </button>
+                    Add admin
+                  </button> */}
+                  <AddAdminBtn />
                 </div>
               </div>
               <div className="mt-8 flow-root">
@@ -46,15 +50,13 @@ export default async function Settings(){
                       </thead>
                       <tbody className="divide-y divide-gray-800">
                         {admins.map((admin, index) => (
-                          <tr key={admin}>
+                          <tr key={index}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0">
-                              {index}
+                              {admin.id}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{admin}</td>
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{admin.usermail}</td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                              <a href="#" className="text-indigo-400 hover:text-indigo-300">
-                                Remove<span className="sr-only">, {admin}</span>
-                              </a>
+                              <DelAdminBtn usermail={admin.usermail} />
                             </td>
                           </tr>
                         ))}

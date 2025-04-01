@@ -67,3 +67,30 @@ export const GET = auth(async function GET(req) {
         );
     }
 })
+
+export const DELETE = auth(async function DELETE(req) {
+    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    const admins = await getAdmins();
+    if (!admins.includes(req.auth.user?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    const body = await req.json();
+    const { usermail } = body;
+    const query = `
+        DELETE FROM admins
+        WHERE usermail = ?;
+    `;
+    // userid to number
+    const values = [usermail];
+    let status, respBody;
+    await apiPost(query, values)
+        .then(() => {
+            status = 200;
+            respBody = { message: "Successfully deleted admin" };
+        })
+        .catch((err) => {
+            status = 400;
+            respBody = err;
+        });
+    return NextResponse.json(respBody, {
+        status, 
+    }); 
+})
