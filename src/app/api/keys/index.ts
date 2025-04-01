@@ -12,3 +12,14 @@ export const getKeys = async () => {
         return [];
     }
 }
+
+
+export interface KeyInterface {
+    usermail: string,
+    description: string,
+    serverpublic: string,
+    preshared: string,
+    userpublic: string,
+    userprivate: string,
+    userip: string
+}
