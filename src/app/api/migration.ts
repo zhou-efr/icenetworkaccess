@@ -20,5 +20,19 @@ export const migrate = () => {
      console.log("key table created successfully.");
     }
    );
+   db.run(
+    `
+      CREATE TABLE IF NOT EXISTS admins (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usermail TEXT
+      );
+    `,
+    (err: Error) => {
+     if (err) {
+      console.error(err.message);
+     }
+     console.log("admin table created successfully.");
+    }
+   );
   });
 }
