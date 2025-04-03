@@ -78,7 +78,7 @@ export const AddBulkBtn = () => {
             <button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="block rounded-md bg-indigo-500 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                className="block rounded-md bg-gray-900 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-blue-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
                 >
                 Bulk add
             </button>
@@ -123,7 +123,7 @@ export const AddBulkBtn = () => {
                                 <button
                                     type="button"
                                     onClick={handleLoadFile}
-                                    className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
                                     >
                                     <svg
                                         fill="none"
@@ -156,7 +156,7 @@ export const AddBulkBtn = () => {
                             </button>
                             <button
                                 type="submit"
-                                className="ml-4 inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="ml-4 inline-flex justify-center rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
                             >
                                 Save
                             </button>

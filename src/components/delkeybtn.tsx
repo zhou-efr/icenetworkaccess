@@ -48,7 +48,7 @@ export const DelKeyBtn = ({uuid}:{uuid: string}) => {
                 text={searchParams.get(uuid+'-notification') == "success" ? "Administrateur a été supprimé avec succès" : "Erreur lors de la suppression de l'administrateur"} 
                 displayed={notificationDisplayed} 
             />
-            <a href="#" onClick={handleClick} className="text-indigo-400 hover:text-indigo-300">
+            <a href="#" onClick={handleClick} className="text-blue-300 hover:text-indigo-300">
                 Delete<span className="sr-only">, {uuid}</span>
             </a>
         </>

@@ -1,14 +1,18 @@
-import { apiPost } from "../../database";
+import { apiGet, apiPost } from "../../database";
 
 export const getKeysOf = async (usermail: string): Promise<{[key: string]: any}[]> => {
     const query = `
-    SELECT * from keys WHERE usermail = ?;
+    SELECT * from keys WHERE usermail = "${usermail}"
     `;
-    const values = [usermail];
 
     let result: {[key: string]: any}[] = [];
     try {
-        const res = await apiPost(query, values) as {[key: string]: any}[];
+        const res = await apiGet(query) as {[key: string]: any}[];
+        console.log({
+            query,
+            res
+        });
+        if (!res) return [];
         result =  res.map((key: any) => {
             return {
                 usermail: key.usermail,

@@ -1,28 +1,40 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import { apiPost } from "../../database";
+import { apiGet, apiPost } from "../../database";
 import { getKeys } from "..";
 
 export const POST = auth(async function POST(req) {
     if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
     const body = await req.json();
-    const { usermail, description} = body;
+    const { usermail, description } = body;
 
+    if (!usermail || !description) return NextResponse.json({ message: "No usermail or description provided" }, { status: 400 });
+    
     const keys = await getKeys();
     const available_keys = keys.filter((key) => !key.usermail);
 
+    if (available_keys.length === 0) return NextResponse.json({ message: "No available keys" }, { status: 400 });
+
     const selected_key = available_keys[0].uuid as string;
+
+    console.log({
+        usermail,
+        description,
+        selected_key
+    });
+    
+
     const query = `
         UPDATE keys
-        SET usermail = ?, description = ?
-        WHERE uuid = ?;
+        SET usermail = "${usermail}", description = "${description}"
+        WHERE uuid = "${selected_key}"
     `;
-    const values = [usermail, description, selected_key];
+    // const values = [usermail, description, selected_key];
     let status, respBody;
     try{
-        const res = await apiPost(query, values);
+        const res = await apiGet(query);
         if (!res) {
-            status = 404;
+            status = 400;
             respBody = null;
             return NextResponse.json(respBody, {
                 status,
