@@ -6,51 +6,6 @@ import { apiPost, apiGet } from "../database";
 import { v4 as uuid } from 'uuid';
 import { getAdmins } from "../admin";
 
-// // Function to check if a string is a valid base64 encoded string
-// const isBase64 = (str: string) => /^[A-Za-z0-9+/=]+$/.test(str);
-
-// // Function to check if the string is a valid IP address
-// const isIP = (str: string) => {
-//   const ipPattern = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/[0-9]{1,2})?$/;
-//   return ipPattern.test(str);
-// };
-
-// // Function to check if the string is a valid UUID
-// const isUUID = (str: string) => {
-//   const uuidPattern = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
-//   return uuidPattern.test(str);
-// };
-
-// // Sanitization function
-// const sanitizeInputs = (body: KeyInterface) => {
-//   // Sanitize email: simple check for non-empty string and remove extra spaces
-//   const sanitizedEmail = (body.usermail && typeof body.usermail === 'string' && body.usermail.trim()) || '';
-  
-//   // Sanitize description: remove extra spaces if it's a non-empty string
-//   const sanitizedDescription = (body.description && typeof body.description === 'string' && body.description.trim()) || '';
-  
-//   // Ensure base64 encoding for keys (sanitize if valid)
-//   const sanitizedServerPublic = isBase64(body.serverpublic) ? body.serverpublic.trim() : '';
-//   const sanitizedPreshared = isBase64(body.preshared) ? body.preshared.trim() : '';
-//   const sanitizedUserPublic = isBase64(body.userpublic) ? body.userpublic.trim() : '';
-//   const sanitizedUserPrivate = isBase64(body.userprivate) ? body.userprivate.trim() : '';
-  
-//   // Validate IP and ensure proper format (remove extra spaces)
-//   const sanitizedUserIp = isIP(body.userip.split('/')[0]) ? body.userip.trim() : '';
-
-  
-//   // Return sanitized object
-//   return {
-//     usermail: sanitizedEmail,
-//     description: sanitizedDescription,
-//     serverpublic: sanitizedServerPublic,
-//     preshared: sanitizedPreshared,
-//     userpublic: sanitizedUserPublic,
-//     userprivate: sanitizedUserPrivate,
-//     userip: sanitizedUserIp
-//   };
-// };
-
 export const POST = auth(async function POST(req) {
     if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const admins = await getAdmins();

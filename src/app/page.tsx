@@ -1,169 +1,75 @@
-import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-} from '@headlessui/react'
-import { 
-  ChevronRightIcon, 
-  ChevronUpDownIcon, 
-} from '@heroicons/react/20/solid'
 
-const statuses:{[key: string]: string} = {
-  offline: 'text-gray-500 bg-gray-100/10',
-  online: 'text-green-400 bg-green-400/10',
-  error: 'text-rose-400 bg-rose-400/10',
-}
-const environments:{[key: string]: string} = {
-  Preview: 'text-gray-400 bg-gray-400/10 ring-gray-400/20',
-  Production: 'text-indigo-400 bg-indigo-400/10 ring-indigo-400/30',
-}
-const deployments = [
-  {
-    id: 1,
-    href: '#',
-    projectName: 'ios-app',
-    teamName: 'Planetaria',
-    status: 'offline',
-    statusText: 'Initiated 1m 32s ago',
-    description: 'Deploys from GitHub',
-    environment: 'Preview',
-  },
-  // More deployments...
-]
-const activityItems = [
-  {
-    user: {
-      name: 'Michael Foster',
-      imageUrl:
-        'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    projectName: 'ios-app',
-    commit: '2d89f0c8',
-    branch: 'main',
-    date: '1h',
-    dateTime: '2023-01-23T11:00',
-  },
-  // More items...
-]
+import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/20/solid'
+import { getKeysOf } from './api/keys/of'
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
+import { GetKeyBtn } from '@/components/getkeybtn';
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
-
-export default function Example() {
-
+export default async function Home() {
+  const session = await auth();
+  if (!session) redirect("/api/auth/signin");
+  const keys = await getKeysOf(session.user?.email as string)
+  console.log(keys)
   return (
     <>
-      <main className="lg:pr-96">
-        <header className="flex items-center justify-between border-b border-white/5 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
-          <h1 className="text-base/7 font-semibold text-white">Deployments</h1>
-
-          {/* Sort dropdown */}
-          <Menu as="div" className="relative">
-            <MenuButton className="flex items-center gap-x-1 text-sm/6 font-medium text-white">
-              Sort by
-              <ChevronUpDownIcon aria-hidden="true" className="size-5 text-gray-500" />
-            </MenuButton>
-            <MenuItems
-              transition
-              className="absolute right-0 z-10 mt-2.5 w-40 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+      <main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+        <div className="md:flex md:items-center md:justify-between">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-2xl/7 font-bold text-white sm:truncate sm:text-3xl sm:tracking-tight">
+              ICE Network Access
+            </h2>
+          </div>
+          <div className="mt-4 flex md:ml-4 md:mt-0">
+            {/* <button
+              type="button"
+              className="inline-flex items-center rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-white/20"
             >
-              <MenuItem>
-                <a
-                  href="#"
-                  className="block px-3 py-1 text-sm/6 text-gray-900 data-[focus]:bg-gray-50 data-[focus]:outline-none"
-                >
-                  Name
-                </a>
-              </MenuItem>
-              <MenuItem>
-                <a
-                  href="#"
-                  className="block px-3 py-1 text-sm/6 text-gray-900 data-[focus]:bg-gray-50 data-[focus]:outline-none"
-                >
-                  Date updated
-                </a>
-              </MenuItem>
-              <MenuItem>
-                <a
-                  href="#"
-                  className="block px-3 py-1 text-sm/6 text-gray-900 data-[focus]:bg-gray-50 data-[focus]:outline-none"
-                >
-                  Environment
-                </a>
-              </MenuItem>
-            </MenuItems>
-          </Menu>
-        </header>
-
-        {/* Deployment list */}
-        <ul role="list" className="divide-y divide-white/5">
-          {deployments.map((deployment) => (
-            <li key={deployment.id} className="relative flex items-center space-x-4 px-4 py-4 sm:px-6 lg:px-8">
-              <div className="min-w-0 flex-auto">
-                <div className="flex items-center gap-x-3">
-                  <div className={classNames(statuses[deployment.status], 'flex-none rounded-full p-1')}>
-                    <div className="size-2 rounded-full bg-current" />
+              Edit
+            </button> */}
+            <GetKeyBtn />
+          </div>
+        </div>
+        <ul role="list" className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {keys.map((key, index) => (
+            <li key={index} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-ice-efrei-blue shadow">
+              <div className="flex w-full items-center justify-between space-x-6 p-6">
+                <div className="flex-1 truncate">
+                  <div className="flex items-center space-x-3">
+                    <h3 className="truncate text-sm font-medium text-white">{key.uuid}</h3>
+                    {/* <span className="inline-flex shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                      {person.role}
+                    </span> */}
                   </div>
-                  <h2 className="min-w-0 text-sm/6 font-semibold text-white">
-                    <a href={deployment.href} className="flex gap-x-2">
-                      <span className="truncate">{deployment.teamName}</span>
-                      <span className="text-gray-400">/</span>
-                      <span className="whitespace-nowrap">{deployment.projectName}</span>
-                      <span className="absolute inset-0" />
+                  <p className="mt-1 truncate text-sm text-white">{key.description}</p>
+                </div>
+                <img alt="" src={`https://github.com/identicons/${key.uuid.replace(/\s/g,"").replace(/-/g,"")}.png`} className="size-10 shrink-0 rounded-full bg-white" />
+              </div>
+              <div>
+                <div className="-mt-px flex divide-x divide-gray-200">
+                  <div className="flex w-0 flex-1">
+                    <a
+                      href={`mailto:${key.uuid}`}
+                      className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-white"
+                    >
+                      <EnvelopeIcon aria-hidden="true" className="size-5 text-white" />
+                      Email
                     </a>
-                  </h2>
-                </div>
-                <div className="mt-3 flex items-center gap-x-2.5 text-xs/5 text-gray-400">
-                  <p className="truncate">{deployment.description}</p>
-                  <svg viewBox="0 0 2 2" className="size-0.5 flex-none fill-gray-300">
-                    <circle r={1} cx={1} cy={1} />
-                  </svg>
-                  <p className="whitespace-nowrap">{deployment.statusText}</p>
+                  </div>
+                  <div className="-ml-px flex w-0 flex-1">
+                    <a
+                      href={`tel:${key.uuid}`}
+                      className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-white"
+                    >
+                      <PhoneIcon aria-hidden="true" className="size-5 text-white" />
+                      Call
+                    </a>
+                  </div>
                 </div>
               </div>
-              <div
-                className={classNames(
-                  environments[deployment.environment],
-                  'flex-none rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset',
-                )}
-              >
-                {deployment.environment}
-              </div>
-              <ChevronRightIcon aria-hidden="true" className="size-5 flex-none text-gray-400" />
             </li>
           ))}
         </ul>
       </main>
-
-      {/* Activity feed */}
-      <aside className="bg-black/10 lg:fixed lg:bottom-0 lg:right-0 lg:top-16 lg:w-96 lg:overflow-y-auto lg:border-l lg:border-white/5">
-        <header className="flex items-center justify-between border-b border-white/5 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
-          <h2 className="text-base/7 font-semibold text-white">Activity feed</h2>
-          <a href="#" className="text-sm/6 font-semibold text-indigo-400">
-            View all
-          </a>
-        </header>
-        <ul role="list" className="divide-y divide-white/5">
-          {activityItems.map((item) => (
-            <li key={item.commit} className="px-4 py-4 sm:px-6 lg:px-8">
-              <div className="flex items-center gap-x-3">
-                <img alt="" src={item.user.imageUrl} className="size-6 flex-none rounded-full bg-gray-800" />
-                <h3 className="flex-auto truncate text-sm/6 font-semibold text-white">{item.user.name}</h3>
-                <time dateTime={item.dateTime} className="flex-none text-xs text-gray-600">
-                  {item.date}
-                </time>
-              </div>
-              <p className="mt-3 truncate text-sm text-gray-500">
-                Pushed to <span className="text-gray-400">{item.projectName}</span> (
-                <span className="font-mono text-gray-400">{item.commit}</span> on{' '}
-                <span className="text-gray-400">{item.branch}</span>)
-              </p>
-            </li>
-          ))}
-        </ul>
-      </aside>
     </>
   )
 }

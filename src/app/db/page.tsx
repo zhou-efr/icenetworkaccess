@@ -70,7 +70,7 @@ export default async function DB() {
                       </thead>
                       <tbody className="divide-y divide-gray-800">
                         {presharedkeys.map((presharedkey) => (
-                          <tr key={presharedkey.usermail}>
+                          <tr key={presharedkey.uuid}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0">{presharedkey.usermail}</td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{presharedkey.description}</td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{presharedkey.serverpublic}</td>

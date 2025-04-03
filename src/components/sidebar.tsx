@@ -77,11 +77,11 @@ export const SideBar = ({
                     </div>
                 </TransitionChild>
                 {/* Sidebar component, swap this element with another sidebar if you like */}
-                <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 ring-1 ring-white/10">
+                <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-ice-efrei-dark-blue px-6 ring-1 ring-white/10">
                     <div className="flex h-16 shrink-0 items-center">
                     <img
                         alt="ICE EFREI"
-                        src="/iceefrei.svg"
+                        src="/ina.svg"
                         className="h-12 w-auto mt-3"
                     />
                     </div>
@@ -162,7 +162,7 @@ export const SideBar = ({
                 <div className="flex h-16 shrink-0 items-center">
                 <img
                     alt="ICE EFREI"
-                    src="/iceefrei.svg"
+                    src="/ina.svg"
                     className="h-12 w-auto mt-3"
                 />
                 </div>

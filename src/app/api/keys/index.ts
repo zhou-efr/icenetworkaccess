@@ -1,12 +1,12 @@
 import { apiGet } from "../database";
 
-export const getKeys = async () => {
+export const getKeys = async (): Promise<KeyInterface[]> => {
     const query = `
     SELECT * from keys;
     `;
 
     try {
-        return await apiGet(query)
+        return await apiGet(query) as KeyInterface[];
     }catch (error: any) {
         console.error(error.message);
         return [];
@@ -15,11 +15,12 @@ export const getKeys = async () => {
 
 
 export interface KeyInterface {
-    usermail: string,
+    usermail?: string,
     description: string,
     serverpublic: string,
     preshared: string,
     userpublic: string,
     userprivate: string,
     userip: string
+    uuid? : string
 }
