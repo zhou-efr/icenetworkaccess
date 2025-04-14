@@ -25,6 +25,67 @@ export default function ShowKey({
         fetchKey();
     }, [])
 
+    const onDownloadClientConfig = async () => {
+        if (!key) return;
+    
+    let text = `
+[Interface]
+PrivateKey = ${key.userprivate}
+Address = ${key.userip}
+DNS = 1.1.1.1
+
+[Peer]
+PublicKey = ${key.userpublic}
+PresharedKey = ${key.preshared}
+AllowedIPs = 0.0.0.0/0, ::/0
+Endpoint = 195.154.182.64:11923
+PersistentKeepalive = 25 # plutot pour des serveurs comme gs arm
+    `
+    let element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', uuid+"-peer.config");
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+    }
+
+    const onDownloadServerConfig = async () => {
+        if (!key) return;
+        
+        let text = `
+[Interface]
+Address = 10.0.2.1/24
+ListenPort = 11923
+PrivateKey = ${process.env.NEXT_PUBLIC_SERVER_PRIVATE_KEY}
+PostUp   = iptables -A FORWARD -i %i -j ACCEPT
+PostUp   = iptables -A FORWARD -o %i -j ACCEPT
+
+#PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+#PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+
+# Or symply add this to the existing server :
+[Peer]
+PublicKey = ${key.serverpublic}
+PresharedKey = ${key.preshared}
+AllowedIPs = ${key.userip}
+        `
+        let element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', uuid+"-server.config");
+    
+        element.style.display = 'none';
+        document.body.appendChild(element);
+    
+        element.click();
+    
+        document.body.removeChild(element);
+
+    }
+
     return (
         <div>
           <div className="px-4 sm:px-0">
@@ -74,9 +135,9 @@ export default function ShowKey({
                         </div>
                       </div>
                       <div className="ml-4 shrink-0">
-                        <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300">
+                        <button onClick={onDownloadServerConfig} className="font-medium text-indigo-400 hover:text-indigo-300">
                           Download
-                        </a>
+                        </button>
                       </div>
                     </li>
                     <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm/6">
@@ -88,9 +149,9 @@ export default function ShowKey({
                         </div>
                       </div>
                       <div className="ml-4 shrink-0">
-                        <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300">
+                        <button onClick={onDownloadClientConfig} className="font-medium text-indigo-400 hover:text-indigo-300">
                           Download
-                        </a>
+                        </button>
                       </div>
                     </li>
                   </ul>

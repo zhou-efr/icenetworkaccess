@@ -29,8 +29,39 @@ export default function Home() {
     setViewKeyUUID(uuid);
   }
   
-  const onDownload = (uuid: string) => {
+  const onDownload = async (uuid: string) => {
     console.log(uuid);
+
+    const key = await fetch("/api/keys?uuid=" + uuid, {
+      method: "GET",
+      credentials: "include"
+    })
+    if (!key.ok) return;
+    const data = await key.json()
+    
+    let text = `
+[Interface]
+PrivateKey = ${data.userprivate}
+Address = ${data.userip}
+DNS = 1.1.1.1
+
+[Peer]
+PublicKey = ${data.clientpublic}
+PresharedKey = ${data.preshared}
+AllowedIPs = 0.0.0.0/0, ::/0
+Endpoint = ${process.env.NEXT_PUBLIC_SERVER_IP}
+PersistentKeepalive = 25 # plutot pour des serveurs comme gs arm
+    `
+    let element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', uuid+"-client.config");
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
   }
 
   useEffect(() => {
