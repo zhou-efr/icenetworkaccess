@@ -3,16 +3,30 @@ import { useSession } from "next-auth/react"
 import { useRouter } from 'next/navigation'
 import KeyCard from '@/components/keycard';
 import { useEffect, useState } from 'react';
+import Drawer from "@/components/drawer";
+import ShowKey from "@/components/showKey";
 
 export default function Home() {
   const { data: session } = useSession()
   const [keys, setKeys] = useState<{[key: string]: string}[]>([])
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false)
+  const [drawerTitle, setDrawerTitle] = useState<string>("")
+  const [viewKeyUUID, setViewKeyUUID] = useState<string>("")
   const router = useRouter();
   if (!session) router.push("/api/auth/signin");
   console.log({usermail: session?.user?.email});
 
+  const onGetKey = () => {
+    setOpenDrawer(true);
+    setDrawerTitle("Récupération d'un accès Wireguard");
+    setViewKeyUUID("");
+  }
+
   const onView = (uuid: string) => {
     console.log(uuid);
+    setOpenDrawer(true);
+    setDrawerTitle("Voir "+uuid);
+    setViewKeyUUID(uuid);
   }
   
   const onDownload = (uuid: string) => {
@@ -49,6 +63,7 @@ export default function Home() {
         <div className="mt-4 flex md:ml-4 md:mt-0">
           <button
             type="button"
+            onClick={onGetKey}
             className="ml-3 inline-flex items-center rounded-md bg-ice-efrei-dark-blue px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-ice-efrei-blue focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-ice-efrei-blue"
           >
             Récupérer un accès Wireguard
@@ -68,6 +83,15 @@ export default function Home() {
           ))
         }
       </ul>
+      <Drawer
+        open={openDrawer}
+        setOpen={setOpenDrawer}
+        title={drawerTitle}
+      >
+        {
+          viewKeyUUID && <ShowKey uuid={viewKeyUUID} />
+        }
+      </Drawer>
     </>
   )
 }

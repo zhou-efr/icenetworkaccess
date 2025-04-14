@@ -5,6 +5,7 @@ import { NextResponse } from "next/server"
 import { apiPost, apiGet } from "../database";
 import { v4 as uuid } from 'uuid';
 import { getAdmins } from "../admin";
+import { KeyInterface } from ".";
 
 export const POST = auth(async function POST(req) {
     if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
@@ -51,6 +52,16 @@ export const POST = auth(async function POST(req) {
 
 export const GET = auth(async function GET(req) {
     if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    const searchParams = req.nextUrl.searchParams;
+    const uuid = searchParams.get("uuid");
+    if (uuid) {
+        const key = await getOneKey(uuid, req.auth.user?.email as string);
+        if (!key) return NextResponse.json({ message: "Key not found" }, { status: 404 })
+        console.log("GET function - key:");
+        console.log(key);
+        return NextResponse.json(key, { status: 200 })
+    }
+        
     const admins = await getAdmins();
     if (!admins.includes(req.auth.user?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const query = `
@@ -109,3 +120,20 @@ export const DELETE = auth(async function DELETE(req) {
     }); 
 })
 
+const getOneKey = async (uuid:string, usermail:string): Promise<KeyInterface | undefined> => {
+    const query = `
+    SELECT * from keys
+    WHERE usermail = '${usermail}' AND uuid = '${uuid}';
+    `;
+
+    try {
+        const key = await apiGet(query) as KeyInterface[];
+        console.log(key);
+        
+        return key[0] as KeyInterface;
+        
+    }catch (error: any) {
+        console.error(error.message);
+        return undefined;
+    }    
+}
