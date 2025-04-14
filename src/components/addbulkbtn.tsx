@@ -78,9 +78,9 @@ export const AddBulkBtn = () => {
             <button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="block rounded-md bg-gray-900 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-blue-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+                className="block rounded-md bg-ice-efrei-dark-blue px-3 py-2 text-center text-sm font-semibold text-white hover:bg-ice-efrei-blue focus-visible:outline-offset-2 focus-visible:outline-ice-efrei-blue"
                 >
-                Bulk add
+                Ajouter plusieurs
             </button>
             <Dialog open={open} onClose={setOpen} className="relative z-50">
                 <div className="fixed inset-0" />
@@ -94,26 +94,26 @@ export const AddBulkBtn = () => {
                         >
                         <form 
                             onSubmit={handleSubmit}
-                            className="flex h-full flex-col divide-y divide-gray-200 bg-ice-efrei-dark-blue shadow-xl"
+                            className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
                             >
                             <div className="h-0 flex-1 overflow-y-auto">
                             <div className="px-4 py-6 sm:px-6">
                                 <div className="flex items-center justify-between">
-                                <DialogTitle className="text-base font-semibold text-white">Ajouter une clef</DialogTitle>
+                                <DialogTitle className="text-base font-semibold text-gray-900">Ajouter une clef</DialogTitle>
                                 <div className="ml-3 flex h-7 items-center">
                                     <button
-                                    type="button"
-                                    onClick={() => setOpen(false)}
-                                    className="relative rounded-md bg-indigo-700 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                                        type="button"
+                                        onClick={() => setOpen(false)}
+                                        className="relative text-gray-400 hover:text-gray-500"
                                     >
-                                    <span className="absolute -inset-2.5" />
-                                    <span className="sr-only">Close panel</span>
-                                    <XMarkIcon aria-hidden="true" className="size-6" />
+                                        <span className="absolute -inset-2.5" />
+                                        <span className="sr-only">Close panel</span>
+                                        <XMarkIcon aria-hidden="true" className="size-6" />
                                     </button>
                                 </div>
                                 </div>
                                 <div className="mt-1">
-                                <p className="text-sm text-indigo-300">
+                                <p className="text-sm text-gray-500">
                                     {"Charger un fichier au format adéquat pour charger plusieurs clefs à la fois."}
                                 </p>
                                 </div>
@@ -139,7 +139,7 @@ export const AddBulkBtn = () => {
                                         strokeLinejoin="round"
                                         />
                                     </svg>
-                                    <span className="mt-2 block text-sm font-semibold text-white">
+                                    <span className="mt-2 block text-sm font-semibold text-gray-400">
                                         {filename ? filename : "Load file to import"}
                                     </span> 
                                     </button>
@@ -150,13 +150,13 @@ export const AddBulkBtn = () => {
                             <button
                                 type="button"
                                 onClick={() => setOpen(false)}
-                                className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
-                                className="ml-4 inline-flex justify-center rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+                                className="ml-4 inline-flex justify-center rounded-md bg-ice-efrei-blue px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-ice-efrei-dark-blue focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-ice-efrei-blue"
                             >
                                 Save
                             </button>

@@ -48,7 +48,7 @@ export const DelAdminBtn = ({usermail}:{usermail: string}) => {
                 text={searchParams.get(usermail+'-notification') == "success" ? "Administrateur a été supprimé avec succès" : "Erreur lors de la suppression de l'administrateur"} 
                 displayed={notificationDisplayed} 
             />
-            <a href="#" onClick={handleClick} className="text-blue-300 hover:text-indigo-300">
+            <a href="#" onClick={handleClick} className="text-ice-efrei-dark-blue hover:text-ice-efrei-blue">
                 Remove<span className="sr-only">, {usermail}</span>
             </a>
         </>

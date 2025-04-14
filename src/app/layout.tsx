@@ -30,12 +30,12 @@ export default async function RootLayout({
   const admins = await getAdmins();
   const isAdmin = admins.includes(session.user?.email as string);
   return (
-    <html className="h-full bg-ice-efrei-dark-blue" lang="en">
+    <html className="h-full bg-white" lang="en">
       <body
         className={`${poppins_font.variable} h-full`}
       >
         <SessionProvider session={session}> 
-          <SideBar user= {session.user as User} isAdmin={isAdmin}>
+          <SideBar user={session.user as User} isAdmin={isAdmin}>
             {children}
           </SideBar>
         </SessionProvider>

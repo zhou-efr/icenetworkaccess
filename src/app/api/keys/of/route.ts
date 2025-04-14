@@ -65,14 +65,13 @@ export const GET = auth(async function GET(req) {
     if (!usermail) return NextResponse.json({ message: "No usermail provided" }, { status: 400 })
 
     const query = `
-    SELECT * from keys WHERE usermail = ?;
+    SELECT * from keys WHERE usermail = "${usermail}"
     `;
-    const values = [usermail];
 
     let status;
     let body : null | {[key: string]: any}[] | {[key: string]: any};
     try {
-        const res = await apiPost(query, values) as {[key: string]: any}[];
+        const res = await apiGet(query) as {[key: string]: any}[];
         if (!res) {
             status = 404;
             body = null;
@@ -85,6 +84,7 @@ export const GET = auth(async function GET(req) {
             return {
                 usermail: key.usermail,
                 description: key.description,
+                uuid: key.uuid
             }
         })
         return NextResponse.json(body, {
