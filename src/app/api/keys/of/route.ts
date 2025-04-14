@@ -59,10 +59,8 @@ export const POST = auth(async function POST(req) {
 
 export const GET = auth(async function GET(req) {
     if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
-    const searchParams = req.nextUrl.searchParams
-    const usermail = searchParams.get('usermail');
-
-    if (!usermail) return NextResponse.json({ message: "No usermail provided" }, { status: 400 })
+    // const searchParams = req.nextUrl.searchParams
+    const usermail = req.auth.user?.email as string;
 
     const query = `
     SELECT * from keys WHERE usermail = "${usermail}"

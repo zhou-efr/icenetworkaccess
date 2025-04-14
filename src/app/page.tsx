@@ -1,10 +1,12 @@
 "use client"
 import { useSession } from "next-auth/react"
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import KeyCard from '@/components/keycard';
 import { useEffect, useState } from 'react';
 import Drawer from "@/components/drawer";
 import ShowKey from "@/components/showKey";
+import Alert from "@/components/alert";
+import AttributeKeyForm from "@/components/attributekeyform";
 
 export default function Home() {
   const { data: session } = useSession()
@@ -12,7 +14,9 @@ export default function Home() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false)
   const [drawerTitle, setDrawerTitle] = useState<string>("")
   const [viewKeyUUID, setViewKeyUUID] = useState<string>("")
+  const [notificationDisplayed, setNotificationDisplayed] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   if (!session) router.push("/api/auth/signin");
   console.log({usermail: session?.user?.email});
 
@@ -77,14 +81,27 @@ PersistentKeepalive = 25 # plutot pour des serveurs comme gs arm
 
       setKeys(data)
     }
+    if (searchParams.get('notification') == "success" || searchParams.get('notification') == "error"){
+        setNotificationDisplayed(true);
+        setTimeout(() => {
+            setNotificationDisplayed(false);
+            router.push("/");
+        }, 5000);
+    }
 
     if (session) {
       fetchKeys()
     }  
-  }, [])
+  }, [searchParams])
 
   return (
     <>
+      <Alert 
+          type={searchParams.get('notification') == "success" ? "success" : "error"} 
+          title={searchParams.get('notification') == "success" ? "Succès" : "Erreur"} 
+          text={searchParams.get('notification') == "success" ? "Clef attribué avec succès" : "Erreur lors de l'attribution de la clef"} 
+          displayed={notificationDisplayed} 
+      />
       <div className="md:flex md:items-center md:justify-between">
         <div className="min-w-0 flex-1">
           <h2 className="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
@@ -120,7 +137,7 @@ PersistentKeepalive = 25 # plutot pour des serveurs comme gs arm
         title={drawerTitle}
       >
         {
-          viewKeyUUID && <ShowKey uuid={viewKeyUUID} />
+          viewKeyUUID ? <ShowKey uuid={viewKeyUUID} /> : <AttributeKeyForm setOpen={setOpenDrawer} usermail={session?.user?.email as string} />
         }
       </Drawer>
     </>
