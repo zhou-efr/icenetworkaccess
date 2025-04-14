@@ -18,7 +18,7 @@ export const GET = auth(async function GET(req) {
 
     let body, status;
     try {
-        const res = await apiGet(query) as {[key: string]: any}[];
+        const res = await apiGet(query) as {[key: string]: string}[];
         console.log("attribute GET - res:");
         console.log(res);
         

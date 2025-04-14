@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import { apiGet, apiPost } from "../../database";
+import { apiGet } from "../../database";
 import { getKeys } from "..";
 
 export const POST = auth(async function POST(req) {

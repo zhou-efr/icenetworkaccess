@@ -8,20 +8,17 @@ import {
   TransitionChild,
 } from '@headlessui/react'
 import {
-  ChartBarSquareIcon,
   Cog6ToothIcon,
   FolderIcon,
-  GlobeAltIcon,
   ServerIcon,
-  SignalIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { 
-  Bars3Icon, 
-  MagnifyingGlassIcon 
+  Bars3Icon
 } from '@heroicons/react/20/solid'
 import { User } from 'next-auth'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 // const teams = [
 //   { id: 1, name: 'Planetaria', href: '#', initial: 'P', current: false },
 //   { id: 2, name: 'Protocol', href: '#', initial: 'P', current: false },
@@ -84,28 +81,31 @@ export const SideBar = ({
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
                         <ul role="list" className="-mx-2 space-y-1">
-                          {navigation.map((item) => (
-                            <li key={item.name}>
-                              <a
-                                href={item.href}
-                                className={classNames(
-                                  item.current
-                                    ? 'bg-ice-efrei-blue text-white'
-                                    : 'text-indigo-200 hover:bg-ice-efrei-blue hover:text-white',
-                                  'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
-                                )}
-                              >
-                                <item.icon
-                                  aria-hidden="true"
+                          {navigation.map((item) => {
+                            if (item.protected && !isAdmin) return null
+                            return (
+                              <li key={item.name}>
+                                <a
+                                  href={item.href}
                                   className={classNames(
-                                    item.current ? 'text-white' : 'text-indigo-200 group-hover:text-white',
-                                    'size-6 shrink-0',
+                                    item.current
+                                      ? 'bg-ice-efrei-blue text-white'
+                                      : 'text-indigo-200 hover:bg-ice-efrei-blue hover:text-white',
+                                    'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
                                   )}
-                                />
-                                {item.name}
-                              </a>
-                            </li>
-                          ))}
+                                >
+                                  <item.icon
+                                    aria-hidden="true"
+                                    className={classNames(
+                                      item.current ? 'text-white' : 'text-indigo-200 group-hover:text-white',
+                                      'size-6 shrink-0',
+                                    )}
+                                  />
+                                  {item.name}
+                                </a>
+                              </li>
+                            )
+                          })}
                         </ul>
                       </li>
                     </ul>
@@ -130,32 +130,35 @@ export const SideBar = ({
                 <ul role="list" className="flex flex-1 flex-col gap-y-7">
                   <li>
                     <ul role="list" className="-mx-2 space-y-1">
-                      {navigation.map((item) => (
-                        <li key={item.name}>
-                          <a
-                            href={item.href}
-                            className={classNames(
-                              item.current
-                                ? 'bg-ice-efrei-blue text-white'
-                                : 'text-indigo-200 hover:bg-ice-efrei-blue hover:text-white',
-                              'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
-                            )}
-                          >
-                            <item.icon
-                              aria-hidden="true"
+                      {navigation.map((item) => {
+                        if (item.protected && !isAdmin) return null
+                        return (
+                          <li key={item.name}>
+                            <a
+                              href={item.href}
                               className={classNames(
-                                item.current ? 'text-white' : 'text-blue-200 group-hover:text-white',
-                                'size-6 shrink-0',
+                                item.current
+                                  ? 'bg-ice-efrei-blue text-white'
+                                  : 'text-indigo-200 hover:bg-ice-efrei-blue hover:text-white',
+                                'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
                               )}
-                            />
-                            {item.name}
-                          </a>
-                        </li>
-                      ))}
+                            >
+                              <item.icon
+                                aria-hidden="true"
+                                className={classNames(
+                                  item.current ? 'text-white' : 'text-blue-200 group-hover:text-white',
+                                  'size-6 shrink-0',
+                                )}
+                              />
+                              {item.name}
+                            </a>
+                          </li>
+                        )
+                      })}
                     </ul>
                   </li>
                   <li className="-mx-6 mt-auto">
-                    <a
+                    <Link
                       href="/api/auth/signout"
                       title="Log out"
                       className="flex items-center gap-x-4 px-6 py-3 text-sm/6 font-semibold text-white hover:bg-ice-efrei-dark-blue"
@@ -167,7 +170,7 @@ export const SideBar = ({
                       />
                       <span className="sr-only">Log Out</span>
                       <span aria-hidden="true">{user.name}</span>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </nav>

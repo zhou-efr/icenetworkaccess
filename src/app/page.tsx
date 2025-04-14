@@ -43,7 +43,7 @@ export default function Home() {
     if (!key.ok) return;
     const data = await key.json()
     
-    let text = `
+    const text = `
 [Interface]
 PrivateKey = ${data.userprivate}
 Address = ${data.userip}
@@ -56,7 +56,7 @@ AllowedIPs = 0.0.0.0/0, ::/0
 Endpoint = ${process.env.NEXT_PUBLIC_SERVER_IP}
 PersistentKeepalive = 25 # plutot pour des serveurs comme gs arm
     `
-    let element = document.createElement('a');
+    const element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', uuid+"-client.config");
 

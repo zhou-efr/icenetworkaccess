@@ -28,7 +28,7 @@ export default function ShowKey({
     const onDownloadClientConfig = async () => {
         if (!key) return;
     
-    let text = `
+    const text = `
 [Interface]
 PrivateKey = ${key.userprivate}
 Address = ${key.userip}
@@ -41,7 +41,7 @@ AllowedIPs = 0.0.0.0/0, ::/0
 Endpoint = 195.154.182.64:11923
 PersistentKeepalive = 25 # plutot pour des serveurs comme gs arm
     `
-    let element = document.createElement('a');
+    const element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', uuid+"-peer.config");
 
@@ -56,7 +56,7 @@ PersistentKeepalive = 25 # plutot pour des serveurs comme gs arm
     const onDownloadServerConfig = async () => {
         if (!key) return;
         
-        let text = `
+        const text = `
 [Interface]
 Address = 10.0.2.1/24
 ListenPort = 11923
@@ -73,7 +73,7 @@ PublicKey = ${key.serverpublic}
 PresharedKey = ${key.preshared}
 AllowedIPs = ${key.userip}
         `
-        let element = document.createElement('a');
+        const element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
         element.setAttribute('download', uuid+"-server.config");
     

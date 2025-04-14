@@ -1,6 +1,4 @@
 "use client"
-import { KeyInterface } from "@/app/api/keys"
-import { useRouter } from "next/navigation"
 import { DelAdminBtn } from "./deladminbtn";
 
 export default function AdminTable({
@@ -8,7 +6,6 @@ export default function AdminTable({
 }:{
     adminList: {[key:string]: string}[]
 }){
-    const router = useRouter();
 
     return ( 
         <div className="mt-8 flow-root">

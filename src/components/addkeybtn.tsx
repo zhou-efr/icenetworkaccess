@@ -25,7 +25,6 @@ export const AddKeyBtn = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const data = newKey;
         const res = await fetch("/api/keys", {
           method: "POST",
           headers: {
@@ -130,7 +129,7 @@ export const AddKeyBtn = () => {
                                         </div>
                                         <div>
                                             <label htmlFor="description" className="block text-sm font-semibold text-gray-900">
-                                                Description (opt si pas d'email)
+                                                {"Description (opt si pas d'email)"}
                                             </label>
                                             <div className="mt-2">
                                                 <input

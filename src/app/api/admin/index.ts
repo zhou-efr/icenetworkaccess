@@ -5,7 +5,7 @@ export const getAdmins = async (): Promise<string[]> => {
     SELECT * from admins;
     `;
 
-    const admins = await apiGet(query) as any[];
+    const admins = await apiGet(query) as {[key: string]: string}[];
 
     if (admins.length == 0) {
         const admins = [
@@ -26,19 +26,19 @@ export const getAdmins = async (): Promise<string[]> => {
     return admins.map((admin) => admin.usermail);
 }
 
-export const getAdminTable = async () => {
+export const getAdminTable = async (): Promise<{[key: string]: string}[]> => {
     const query = `
     SELECT * from admins;
     `;
 
-    const admins = await apiGet(query) as any[];
+    const admins = await apiGet(query) as {[key: string]: string}[];
 
     if (admins.length == 0) {
-        const admins = [
+        const basicadmins = [
             "association@ice-efrei.fr",
             "killian.zhou@ice-efrei.fr"
         ]
-        for (const admin of admins){
+        for (const admin of basicadmins){
             const query = `
             INSERT INTO admins(usermail)
             VALUES(?);
@@ -49,5 +49,5 @@ export const getAdminTable = async () => {
         return await getAdmins();
     } 
     
-    return admins;
+    return admins as {[key: string]: string}[];
 }

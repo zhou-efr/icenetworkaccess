@@ -93,7 +93,7 @@ export const AddAdminBtn = () => {
                                 </div>
                                 <div className="mt-1">
                                 <p className="text-sm text-gray-500">
-                                    Ajouter un compte ayant accès aux onglets d'administration.
+                                    {"Ajouter un compte ayant accès aux onglets d'administration."}
                                 </p>
                                 </div>
                             </div>

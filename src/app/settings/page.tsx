@@ -17,7 +17,7 @@ export default async function Settings(){
                   <div className="sm:flex sm:items-center">
                     <div className="sm:flex-auto">
                       <h1 className="text-base font-semibold text-gray-900">
-                        Liste des administrateurs de l'INA
+                        {"Liste des administrateurs de l'INA"}
                       </h1>
                     </div>
                     <div className="mt-4 flex gap-3 md:ml-4 md:mt-0">
