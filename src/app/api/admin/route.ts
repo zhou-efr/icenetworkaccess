@@ -1,77 +1,74 @@
-// https://krimsonhart.medium.com/how-i-built-my-portfolio-using-next-js-and-sqlite-db-part-2-37595ca4dc40
-
-import { auth } from "@/auth"
-import { NextResponse } from "next/server"
+import { getToken, JWT } from "next-auth/jwt"
+import { NextRequest, NextResponse } from "next/server"
 import { apiPost, apiGet } from "../database";
 import { getAdmins } from ".";
 
-export const POST = auth(async function POST(req) {
-    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
-    const body = await req.json();
+export async function POST(req: NextRequest) {
+    const token : JWT | null = await getToken({ req: req, secret: process.env.AUTH_SECRET })
+    if (!token) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    const body = await req.json() as { usermail: string };
     const { usermail } = body;
 
     // TODO : sanitize
     const admins = await getAdmins();
-    if (!admins.includes(req.auth.user?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    if (!admins.includes(token?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
 
     const query = `
         INSERT INTO admins(usermail)
         VALUES(?);
     `;
     const values = [usermail];
-
+    
     let status, respBody;
-    await apiPost(query, values)
-        .then(() => {
-            status = 200;
-            respBody = { message: "Successfully created admin" };
-        })
-        .catch((err) => {
-            status = 400;
-            respBody = err;
-        });
-    return NextResponse.json(respBody, {
-        status, 
-    });
-});
+    try {
+        await apiPost(query, values);
+        status = 200;
+        respBody = { message: "Successfully created admin" };
+    } catch (error: any) {
+        console.error(error.message);
+        status = 400;
+        respBody = { error: error.message as string };
+    }
+    return NextResponse.json(
+        respBody,
+        {
+            status,
+        }
+    );
+};
 
-export const GET = auth(async function GET(req) {
-    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+export async function GET(req: NextRequest) {
+    const token : JWT | null = await getToken({ req: req, secret: process.env.AUTH_SECRET })
+    if (!token) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const admins = await getAdmins();
-    if (!admins.includes(req.auth.user?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    if (!admins.includes(token?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const query = `
     SELECT * from admins;
     `;
 
     let status, body;
     try {
-        await apiGet(query)
-            .then((res) => {
-                status = 200;
-                body = res;
-            })
-            .catch((err: Error) => {
-                status = 400;
-                body = { error: err };
-            });
-        return NextResponse.json(body, {
-            status,
-        });
+        const admins = await apiGet(query) as {[key: string]: string}[];
+        status = 200;
+        body = admins;
     } catch (error: any) {
         console.error(error.message);
-        return NextResponse.json(
-            { error: error },
-            {
-                status: 400,
-            }
-        );
+        status = 400;
+        body = { error: error.message as string };
     }
-})
+    return NextResponse.json(
+        body,
+        {
+            status,
+        }
+    );
+}
 
-export const DELETE = auth(async function DELETE(req) {
-    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+export async function DELETE(req: NextRequest) {
+    const token : JWT | null = await getToken({ req: req, secret: process.env.AUTH_SECRET })
+    if (!token) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const admins = await getAdmins();
-    if (!admins.includes(req.auth.user?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    if (!admins.includes(token?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const body = await req.json();
     const { usermail } = body;
     const query = `
@@ -93,4 +90,4 @@ export const DELETE = auth(async function DELETE(req) {
     return NextResponse.json(respBody, {
         status, 
     }); 
-})
+}

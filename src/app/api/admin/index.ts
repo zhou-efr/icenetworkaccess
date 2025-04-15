@@ -46,7 +46,7 @@ export const getAdminTable = async (): Promise<{[key: string]: string}[]> => {
             const values = [admin];
             await apiPost(query, values);
         }
-        return await getAdmins();
+        return await getAdminTable();
     } 
     
     return admins as {[key: string]: string}[];

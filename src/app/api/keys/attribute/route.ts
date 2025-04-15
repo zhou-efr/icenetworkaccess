@@ -1,12 +1,13 @@
-import { auth } from "@/auth"
-import { NextResponse } from "next/server"
+import { getToken, JWT } from "next-auth/jwt"
+import { NextRequest, NextResponse } from "next/server"
 import { apiGet } from "../../database"
 
-export const GET = auth(async function GET(req) {
-    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+export async function GET(req: NextRequest) {
+    const token : JWT | null = await getToken({ req: req, secret: process.env.AUTH_SECRET })
+    if (!token) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const searchParams = req.nextUrl.searchParams
     const description = searchParams.get('description');
-    const usermail = req.auth.user?.email as string;
+    const usermail = token?.email as string;
 
     console.log("attribute GET - usermail, description:");
     console.log(usermail);
@@ -51,4 +52,4 @@ export const GET = auth(async function GET(req) {
                 status: 400,
             });
     }
-})
+}

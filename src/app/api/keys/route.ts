@@ -1,16 +1,15 @@
-// https://krimsonhart.medium.com/how-i-built-my-portfolio-using-next-js-and-sqlite-db-part-2-37595ca4dc40
-
-import { auth } from "@/auth"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { apiPost, apiGet } from "../database";
 import { v4 as uuid } from 'uuid';
 import { getAdmins } from "../admin";
 import { KeyInterface } from ".";
+import { JWT, getToken } from "next-auth/jwt";
 
-export const POST = auth(async function POST(req) {
-    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+export async function POST(req: NextRequest) {
+    const token : JWT | null = await getToken({ req: req, secret: process.env.AUTH_SECRET })
+    if (!token) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const admins = await getAdmins();
-    if (!admins.includes(req.auth.user?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    if (!admins.includes(token?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const body = await req.json();
     const { usermail, description, preshared, serverpublic, userpublic, userprivate, userip } = body;
     
@@ -48,14 +47,15 @@ export const POST = auth(async function POST(req) {
     return NextResponse.json(respBody, {
         status, 
     });
-});
+}
 
-export const GET = auth(async function GET(req) {
-    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+export async function GET(req: NextRequest) {
+    const token : JWT | null = await getToken({ req: req, secret: process.env.AUTH_SECRET })
+    if (!token) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const searchParams = req.nextUrl.searchParams;
     const uuid = searchParams.get("uuid");
     if (uuid) {
-        const key = await getOneKey(uuid, req.auth.user?.email as string);
+        const key = await getOneKey(uuid, token?.email as string);
         if (!key) return NextResponse.json({ message: "Key not found" }, { status: 404 })
         console.log("GET function - key:");
         console.log(key);
@@ -63,7 +63,7 @@ export const GET = auth(async function GET(req) {
     }
         
     const admins = await getAdmins();
-    if (!admins.includes(req.auth.user?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    if (!admins.includes(token?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const query = `
     SELECT * from keys;
     `;
@@ -91,12 +91,13 @@ export const GET = auth(async function GET(req) {
             }
         );
     }
-})
+}
 
-export const DELETE = auth(async function DELETE(req) {
-    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+export async function DELETE(req: NextRequest) {
+    const token : JWT | null = await getToken({ req: req, secret: process.env.AUTH_SECRET })
+    if (!token) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const admins = await getAdmins();
-    if (!admins.includes(req.auth.user?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    if (!admins.includes(token?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const body = await req.json();
     const { uuid } = body;
     const query = `
@@ -118,7 +119,7 @@ export const DELETE = auth(async function DELETE(req) {
     return NextResponse.json(respBody, {
         status, 
     }); 
-})
+}
 
 const getOneKey = async (uuid:string, usermail:string): Promise<KeyInterface | undefined> => {
     const query = `

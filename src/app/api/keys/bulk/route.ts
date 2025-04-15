@@ -1,14 +1,15 @@
-import { auth } from "@/auth"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { apiPost } from "../../database";
 import { v4 as uuid } from 'uuid';
 import { getAdmins } from "../../admin";
+import { JWT, getToken } from "next-auth/jwt";
 
 
-export const POST = auth(async function POST(req) {
-    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+export async function POST(req: NextRequest) {
+    const token : JWT | null = await getToken({ req: req, secret: process.env.AUTH_SECRET })
+    if (!token) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const admins = await getAdmins();
-    if (!admins.includes(req.auth.user?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    if (!admins.includes(token?.email as string)) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const body = await req.json();
     const { bulk } = body;
     console.log(bulk);
@@ -56,4 +57,4 @@ export const POST = auth(async function POST(req) {
     return NextResponse.json(respBody, {
         status, 
     });
-});
+}

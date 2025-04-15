@@ -1,10 +1,11 @@
-import { auth } from "@/auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { apiGet } from "../../database";
 import { getKeys } from "..";
+import { JWT, getToken } from "next-auth/jwt";
 
-export const POST = auth(async function POST(req) {
-    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+export async function POST(req: NextRequest) {
+    const token : JWT | null = await getToken({ req: req, secret: process.env.AUTH_SECRET })
+    if (!token) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     const body = await req.json();
     const { usermail, description } = body;
 
@@ -55,12 +56,12 @@ export const POST = auth(async function POST(req) {
         );
     }
     
-});
+}
 
-export const GET = auth(async function GET(req) {
-    if (!req.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
-    // const searchParams = req.nextUrl.searchParams
-    const usermail = req.auth.user?.email as string;
+export async function GET(req: NextRequest) {
+    const token : JWT | null = await getToken({ req: req, secret: process.env.AUTH_SECRET })
+    if (!token) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+    const usermail = token?.email as string;
 
     const query = `
     SELECT * from keys WHERE usermail = "${usermail}"
@@ -97,4 +98,4 @@ export const GET = auth(async function GET(req) {
             }
         );
     }
-})
+}
