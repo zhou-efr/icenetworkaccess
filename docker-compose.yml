@@ -1,13 +1,13 @@
-version: '3.5'
+version: '3.8'
 
 services:
-  app:
+  nextjs-app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ina
     ports:
-      - '3000:3000'
-    volumes:
-      - .:/app
-      - /app/node_modules
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
